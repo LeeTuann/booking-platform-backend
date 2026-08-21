@@ -1,0 +1,36 @@
+package com.tuanle.bookingplatform.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "payments")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+
+public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", nullable = false,unique = true)
+    private Booking booking;
+
+    @Column(nullable = false)
+    private BigDecimal amount;
+    @Column(nullable = false)
+    private String paymentMethod;
+    @Column(nullable = false)
+    private String status;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime transactionDate;
+}
