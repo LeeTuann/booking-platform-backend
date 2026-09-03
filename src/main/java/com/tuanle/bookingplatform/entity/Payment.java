@@ -33,4 +33,6 @@ public class Payment {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime transactionDate;
+    @Column(nullable = false)
+    private LocalDateTime paymentDate;
 }
