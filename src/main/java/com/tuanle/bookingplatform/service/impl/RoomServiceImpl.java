@@ -64,12 +64,35 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng với ID: " + id));
 
-        // Kỹ thuật Soft Delete: Thay vì xóa hẳn khỏi Database, ta đổi trạng thái sang BẢO TRÌ
         room.setStatus("MAINTENANCE");
         roomRepository.save(room);
     }
 
-    // --- Hàm tiện ích hỗ trợ (Mapper) ---
+    @Override
+    public Page<RoomResponseDTO> searchRooms(String name, String status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Room> rooms;
+
+        if (name != null && !name.trim().isEmpty()) {
+            rooms = roomRepository.findByNameContainingIgnoreCase(name, pageable);
+        }
+        else if (status != null && !status.trim().isEmpty()) {
+            rooms = roomRepository.findByStatus(status, pageable);
+        }
+        else {
+            rooms = roomRepository.findAll(pageable);
+        }
+
+        return rooms.map(room -> RoomResponseDTO.builder()
+                .id(room.getId())
+                .name(room.getName())
+                .description(room.getDescription())
+                .pricePerNight(room.getPricePerNight())
+                .capacity(room.getCapacity())
+                .status(room.getStatus())
+                .build());
+    }
+    //Mapper
     private RoomResponseDTO mapToResponseDTO(Room room) {
         return RoomResponseDTO.builder()
                 .id(room.getId())

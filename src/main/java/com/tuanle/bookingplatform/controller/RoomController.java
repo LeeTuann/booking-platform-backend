@@ -20,9 +20,11 @@ public class RoomController {
     @Operation(summary = "Lấy danh sách phòng", description = "Trả về danh sách phòng có phân trang")
     @GetMapping
     public ResponseEntity<Page<RoomResponseDTO>> getAllRooms(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(roomService.getAllRooms(page, size));
+        return ResponseEntity.ok(roomService.searchRooms(name, status, page, size));
     }
     @Operation(summary = "Lấy chi tiết một phòng", description = "Truyền vào ID của phòng để lấy thông tin chi tiết")
     @GetMapping("/{id}")
