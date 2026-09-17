@@ -31,7 +31,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy User với ID: " + requestDTO.getUserId()));
 
         // 2. Kiểm tra Room có tồn tại và đang trống không
-        Room room = roomRepository.findById(requestDTO.getRoomId())
+        Room room = roomRepository.findByIdForUpdate(requestDTO.getRoomId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Phòng với ID: " + requestDTO.getRoomId()));
 
         if (!"AVAILABLE".equalsIgnoreCase(room.getStatus())) {
